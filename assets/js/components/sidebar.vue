@@ -56,8 +56,8 @@
 </template>
 
 <script>
-import axios from 'axios';
 import Loading from '@/components/loading';
+import { fetchCategories } from '@/services/categories-service';
 
 export default {
     name: 'Sidebar',
@@ -74,6 +74,11 @@ export default {
             default: null,
         },
     },
+    data() {
+        return {
+            categories: [],
+        };
+    },
     computed: {
         componentClass() {
             const classes = [this.$style.component, 'p-3', 'mb-5'];
@@ -82,17 +87,12 @@ export default {
             }
             return classes;
         },
-        laoding() {
+        loading() {
             return this.categories.length === 0;
         },
     },
-    data() {
-        return {
-            categories: [],
-        };
-    },
     async created() {
-        const categories = await axios.get('/api/categories');
+        const categories = await fetchCategories();
         this.categories = categories.data['hydra:member'];
     },
 };
