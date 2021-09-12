@@ -7,9 +7,12 @@
                 </h1>
             </div>
         </div>
-        <div class="row">
-            <product-list :products="products" />
-        </div>
+
+        <product-list
+            :products="products"
+            :loading="loading"
+        />
+
         <div class="row">
             <legend-component :title="legend"/>
         </div>
@@ -28,16 +31,39 @@ export default {
         LegendComponent,
         ProductList,
     },
+    props: {
+        currentCategoryId: {
+            type: String,
+            default: null,
+        },
+    },
     data() {
         return {
-            firstName: 'Faizan',
             products: [],
+            loading: false,
             legend: 'Shipping takes 10-12 weeks, and products probably won\'t work',
         };
     },
     async created() {
-        const products = await axios.get('/api/products');
-        this.products = products.data['hydra:member'];
+        const params = {};
+        if (this.currentCategoryId) {
+            params.category = this.currentCategoryId;
+        }
+
+        this.loading = true;
+        let response = [];
+
+        try {
+            response = await axios.get('/api/products', {
+                params,
+            });
+            this.loading = false;
+        } catch (e) {
+            this.loading = false;
+            return;
+        }
+
+        this.products = response.data['hydra:member'];
     },
 };
 </script>

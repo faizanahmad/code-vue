@@ -12,12 +12,16 @@
             <h5 class="text-center">
                 Categories
             </h5>
+            <loading v-show="loading" />
             <ul
                 class="nav flex-column mb4"
             >
                 <li class="nav-item">
                     <a
-                        class="nav-link"
+                        :class="{
+                            'nav-link': true,
+                            [$style.selected]: currentCategoryId === null,
+                        }"
                         href="/"
                     >All Products</a>
                 </li>
@@ -28,7 +32,10 @@
                     class="nav-item"
                 >
                     <a
-                        class="nav-link"
+                        :class="{
+                            'nav-link': true,
+                            [$style.selected]: category['@id'] === currentCategoryId,
+                        }"
                         :href="`/category/${category.id}/`"
                     >{{ category.name }}</a>
                 </li>
@@ -50,13 +57,21 @@
 
 <script>
 import axios from 'axios';
+import Loading from '@/components/loading';
 
 export default {
     name: 'Sidebar',
+    components: {
+        Loading,
+    },
     props: {
         collapsed: {
             type: Boolean,
             required: true,
+        },
+        currentCategoryId: {
+            type: String,
+            default: null,
         },
     },
     computed: {
@@ -66,6 +81,9 @@ export default {
                 classes.push(this.$style.collapsed);
             }
             return classes;
+        },
+        laoding() {
+            return this.categories.length === 0;
         },
     },
     data() {
@@ -83,16 +101,18 @@ export default {
 <style lang="scss" module>
 @import "~styles/components/light-component";
 
-.component {
+
+.component  {
     @include light-component;
 
-    &.collapsed {
-        width: 70px;
-    }
     ul {
         li a:hover {
             background: $blue-component-link-hover;
             //background: pink;
+        }
+
+        li a.selected {
+            background: $light-component-border;
         }
     }
 }
