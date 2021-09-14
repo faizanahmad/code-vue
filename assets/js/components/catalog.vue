@@ -56,18 +56,25 @@ export default {
             products: [],
             loading: false,
             legend: 'Shipping takes 10-12 weeks, and products probably won\'t work',
+            searchTerm: null,
         };
     },
-    methods: {
-        onSearchProducts(event) {
-            this.loadProducts(event.term);
+    watch: {
+        currentCategoryId() {
+            this.loadProducts();
         },
-        async loadProducts(searchTerm) {
+    },
+    methods: {
+        onSearchProducts({ term }) {
+            this.searchTerm = term;
+            this.loadProducts();
+        },
+        async loadProducts() {
             this.loading = true;
             let response = [];
 
             try {
-                response = await fetchProducts(this.currentCategoryId, searchTerm);
+                response = await fetchProducts(this.currentCategoryId, this.searchTerm);
                 this.loading = false;
             } catch (e) {
                 this.loading = false;

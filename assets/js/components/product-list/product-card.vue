@@ -24,6 +24,8 @@
 </template>
 
 <script>
+import formatPrice from '@/helpers/format-price';
+
 export default {
     name: 'ProductCard',
     props: {
@@ -38,7 +40,7 @@ export default {
          * @returns {string}
          */
         price() {
-            return (this.product.price / 100).toLocaleString('en-Us', {minimumFractionDigits: 2});
+            return formatPrice(this.product.price);
         },
     },
 };

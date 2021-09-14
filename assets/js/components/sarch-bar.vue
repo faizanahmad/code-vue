@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="input-group">
         <input
             v-model="searchTerm"
             class="form-control"
@@ -7,6 +7,13 @@
             type="search"
             @input="onInput"
         >
+        <div>
+            <button
+                v-show="searchTerm !== ''"
+                @click="clearSearch"
+                class="btn btn-secondary"
+            >x</button>
+        </div>
     </div>
 </template>
 
@@ -20,6 +27,10 @@ export default {
         };
     },
     methods: {
+        clearSearch() {
+            this.searchTerm = '';
+            this.$emit('search-products', { term: this.searchTerm });
+        },
         onInput() {
             if (this.searchTimeout) {
                 clearTimeout(this.searchTimeout);

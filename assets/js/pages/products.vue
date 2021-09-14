@@ -5,8 +5,8 @@
                 <sidebar
                     :collapsed="sidebarCollapsed"
                     :current-category-id="currentCategoryId"
-                    @toggle-collapsed="toggleSidebarCollapsed"
                     :categories="categories"
+                    @toggle-collapsed="toggleSidebarCollapsed"
                 />
             </aside>
             <div :class="contentClass">
@@ -40,9 +40,6 @@ export default {
         contentClass() {
             return this.sidebarCollapsed ? 'col-xs-12 col-11' : 'col-xs-12 col-9';
         },
-        currentCategoryId() {
-            return getCurrectCategoryId();
-        },
     },
     methods: {
         toggleSidebarCollapsed() {
@@ -53,6 +50,7 @@ export default {
         return {
             sidebarCollapsed: false,
             categories: [],
+            currentCategoryId: getCurrectCategoryId(),
         };
     },
     async created() {
