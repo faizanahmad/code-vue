@@ -1,10 +1,15 @@
 <template>
     <div>
         <div class="row">
-            <div class="col-12">
+            <div class="col-3">
                 <title-component
                     :current-category-id="currentCategoryId"
                     :categories="categories"
+                />
+            </div>
+            <div class="col-9">
+                <search-bar
+                    @search-products="onSearchProducts"
                 />
             </div>
         </div>
@@ -26,10 +31,12 @@ import LegendComponent from '@/components/legend';
 import ProductList from '@/components/product-list';
 import { fetchProducts } from '@/services/products-service';
 import TitleComponent from '@/components/title';
+import SearchBar from '@/components/sarch-bar';
 
 export default {
     name: 'Catalog',
     components: {
+        SearchBar,
         LegendComponent,
         ProductList,
         TitleComponent,
@@ -51,19 +58,27 @@ export default {
             legend: 'Shipping takes 10-12 weeks, and products probably won\'t work',
         };
     },
+    methods: {
+        onSearchProducts(event) {
+            this.loadProducts(event.term);
+        },
+        async loadProducts(searchTerm) {
+            this.loading = true;
+            let response = [];
+
+            try {
+                response = await fetchProducts(this.currentCategoryId, searchTerm);
+                this.loading = false;
+            } catch (e) {
+                this.loading = false;
+                return;
+            }
+
+            this.products = response.data['hydra:member'];
+        },
+    },
     async created() {
-        this.loading = true;
-        let response = [];
-
-        try {
-            response = await fetchProducts(this.currentCategoryId);
-            this.loading = false;
-        } catch (e) {
-            this.loading = false;
-            return;
-        }
-
-        this.products = response.data['hydra:member'];
+        this.loadProducts(null);
     },
 };
 </script>

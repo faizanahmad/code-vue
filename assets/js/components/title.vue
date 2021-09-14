@@ -1,5 +1,9 @@
 <template>
-    <h1 :style="$style.component">{{ categoryName }}</h1>
+    <div :class="$style.component">
+        <h1>
+            {{ categoryName }}
+        </h1>
+    </div>
 </template>
 
 <script>
@@ -30,6 +34,8 @@ export default {
 
 <style lang="scss" module>
     .component  {
-        font-size: 16rem;
+        h1 {
+            font-size: 1.6rem;
+        }
     }
 </style>
