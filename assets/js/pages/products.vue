@@ -10,9 +10,9 @@
                 />
             </aside>
             <div :class="contentClass">
-                <catalog
-                    :current-category-id="currentCategoryId"
-                    :categories="categories"
+                <component
+                    :is="currentComponent"
+                    v-bind="currentProps"
                 />
             </div>
         </div>
@@ -24,7 +24,8 @@
 
 import Catalog from '@/components/catalog';
 import Sidebar from '@/components/sidebar';
-import { getCurrectCategoryId } from '@/services/page-context';
+import ProductShow from '@/components/product-show';
+import { getCurrentCategoryId, getCurrentProductId } from '@/services/page-context';
 import { fetchCategories } from '@/services/categories-service';
 
 export default {
@@ -32,6 +33,7 @@ export default {
     components: {
         Catalog,
         Sidebar,
+        ProductShow,
     },
     computed: {
         asideClass() {
@@ -39,6 +41,17 @@ export default {
         },
         contentClass() {
             return this.sidebarCollapsed ? 'col-xs-12 col-11' : 'col-xs-12 col-9';
+        },
+        currentComponent() {
+            return this.currentProductId !== null ? ProductShow : Catalog;
+        },
+        currentProps() {
+            return this.currentComponent === ProductShow ? {
+                productId: this.currentProductId,
+            } : {
+                categories: this.categories,
+                currentCategoryId: this.currentCategoryId,
+            };
         },
     },
     methods: {
@@ -50,7 +63,8 @@ export default {
         return {
             sidebarCollapsed: false,
             categories: [],
-            currentCategoryId: getCurrectCategoryId(),
+            currentCategoryId: getCurrentCategoryId(),
+            currentProductId: getCurrentProductId(),
         };
     },
     async created() {
