@@ -6,6 +6,7 @@ namespace App\Controller;
 use ApiPlatform\Core\Api\IriConverterInterface;
 use App\Entity\Category;
 use App\Entity\Product;
+use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,10 +24,11 @@ class ProductController extends AbstractController
     /**
      * @Route("/category/{id}", name="app_category")
      */
-    public function showCategory(Category $category, IriConverterInterface $iriConverter): Response
+    public function showCategory(Category $category, IriConverterInterface $iriConverter, CategoryRepository $categoryRepository): Response
     {
         return $this->render('product/index.html.twig', [
-            'currentCategoryId' => $iriConverter->getIriFromItem($category)
+            'currentCategoryId' => $iriConverter->getIriFromItem($category),
+            'categories' => $categoryRepository->findAll(),
         ]);
     }
 

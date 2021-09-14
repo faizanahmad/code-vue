@@ -73,11 +73,10 @@ export default {
             type: String,
             default: null,
         },
-    },
-    data() {
-        return {
-            categories: [],
-        };
+        categories: {
+            type: Array,
+            required: true,
+        },
     },
     computed: {
         componentClass() {
@@ -90,10 +89,6 @@ export default {
         loading() {
             return this.categories.length === 0;
         },
-    },
-    async created() {
-        const categories = await fetchCategories();
-        this.categories = categories.data['hydra:member'];
     },
 };
 </script>
